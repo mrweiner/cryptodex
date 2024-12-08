@@ -118,7 +118,8 @@ class Portfolio:
 
         # calculate the target allocation of each asset in the portfolio
         # based on the square root of its market cap
-        self.allocate_by_sqrt_market_cap()
+#         self.allocate_by_sqrt_market_cap()
+        self.allocate_by_equal_weight()
 
         # create a list of all the symbols of the assets we hold in the portfolio,
         # and pass that to the get_assets_data() method on the exchange to get
@@ -235,6 +236,17 @@ class Portfolio:
                 )
             else:
                 holding.target = 0
+
+    def allocate_by_equal_weight(self):
+        non_frozen_holdings = [h for h in self.holdings if not h.frozen and not h.stale]
+        count = len(non_frozen_holdings)
+        if count > 0:
+            equal_weight = 100 / count
+            for holding in self.holdings:
+                if not holding.frozen and not holding.stale:
+                    holding.target = equal_weight
+                else:
+                    holding.target = 0
 
     def calculate_owned_allocation(self):
         non_frozen_holdings = [h for h in self.holdings if not h.frozen]
