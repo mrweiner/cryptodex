@@ -112,13 +112,14 @@ def balance(state, log):
         write_portfolio_assets(filename, state.portfolio.holdings, state.currency)
 
 
-def invest(portfolio, exchange, currency, amount, rebalance, estimate, mock=True):
+def invest(portfolio, exchange, currency, amount, rebalance, estimate, mock=True, usd_balance=None):
     with console.status("[bold green]Calculating investments..."):
         raw_orders = portfolio.invest(amount=amount, rebalance=rebalance)
         orders = sorted(raw_orders, key=lambda order: order.buy_or_sell, reverse=True)
 
     console.print("[bold]The following orders will be sent to the exchange:")
-    display_orders(orders)
+
+    display_orders(orders, usd_balance=usd_balance)
 
     invalid_orders = [
         order for order in orders if float(abs(order.units)) < float(order.minimum_order)
@@ -198,6 +199,7 @@ def buy(state, amount, rebalance, estimate, mock, use_usd_balance):
         rebalance,
         estimate,
         mock=mock,
+        usd_balance=amount if use_usd_balance else None,
     )
 
 

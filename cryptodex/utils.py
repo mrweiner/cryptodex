@@ -74,7 +74,7 @@ def write_portfolio_assets(filename, assets, currency=None):
         writer.writerow(["", "", "", "", format_currency(total, currency)])
 
 
-def display_orders(orders):
+def display_orders(orders, usd_balance=None):
     table = Table()
     table.add_column("Asset")
     table.add_column("Order Type")
@@ -98,4 +98,11 @@ def display_orders(orders):
             min_order,
             style=row_style,
         )
+    if usd_balance is not None and usd_balance > 0:
+        # Add a fake SELL order for the USD balance
+        table.add_row(
+            "[bold]USD", "SELL", f"{usd_balance:.5f}", format_currency(usd_balance, "usd"), "N/A", style="green"
+        )
     console.print(table)
+
+
