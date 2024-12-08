@@ -3,6 +3,14 @@ from abc import ABC, abstractmethod
 
 class Exchange(ABC):
     @abstractmethod
+    def get_usd_balance(self):
+        """
+        Fetch the available USD balance from the exchange account.
+        This should return the balance in USD or 0 if the balance is unavailable.
+        """
+        pass
+
+    @abstractmethod
     def get_symbol(self, symbol):
         """
         given an asset symbol from coingecko, return the asset symbol in the exchange
@@ -33,7 +41,7 @@ class Exchange(ABC):
         """
         given a list of assets symbols and a fiat currency, returns a list of dictionaries
         contains the data for each asset. Each must contain the following fields:
-        
+
         [symbol]: the symbol of the asset
         [minimum_order]: the minimum amount of units that can be traded for the assets
         [price]: the price of a unit of the asset
@@ -53,7 +61,7 @@ class Exchange(ABC):
         symbol: the symbol of the asset being traded
         currency: the fiat currency used for trading
         units: the units of the asset to buy / sell
-        cost: the cost / revenue of the order in fiat currency units 
+        cost: the cost / revenue of the order in fiat currency units
             (negative units means purchase order, positive means sell order)
         buy_or_sell: a string which is "buy" or "sell" based on the order type
         minimum_order: the minimum amount of units that can be traded for the assets

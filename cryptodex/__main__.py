@@ -174,7 +174,22 @@ def invest(portfolio, exchange, currency, amount, rebalance, estimate, mock=True
     default=True,
     help="Only validate orders, do not send them to the exchange",
 )
-def buy(state, amount, rebalance, estimate, mock):
+
+@click.option(
+    "--use-usd-balance",
+    is_flag=True,
+    help="Use the available USD balance from Kraken as the buy amount",
+)
+
+def buy(state, amount, rebalance, estimate, mock, use_usd_balance):
+    if use_usd_balance:
+        amount = state.exchange.get_usd_balance()
+        console.print(f"Using USD balance from Kraken: {amount:.2f}")
+
+    if amount < 0:
+        console.print("[red]Invalid or negative amount specified. Exiting.")
+        return
+
     invest(
         state.portfolio,
         state.exchange,
@@ -184,6 +199,7 @@ def buy(state, amount, rebalance, estimate, mock):
         estimate,
         mock=mock,
     )
+
 
 
 @app.command(help="Sell the equivalent of a lump sum from your portfolio")

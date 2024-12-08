@@ -23,6 +23,19 @@ class KrakenExchange(Exchange):
         self.api = krakenex.API(key, secret)
         return
 
+    def get_usd_balance(self):
+        """
+        Fetch the available USD balance from the Kraken account.
+        """
+        try:
+            balances = self.api.query_private("Balance")["result"]
+            usd_balance = float(balances.get("ZUSD", 0))
+            return usd_balance
+        except Exception as e:
+            log.error(f"Error fetching USD balance: {e}")
+            return 0
+
+
     def get_symbol(self, symbol):
         return SYMBOLS.get(symbol, symbol)
 
