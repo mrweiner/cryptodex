@@ -149,7 +149,8 @@ def invest(portfolio, exchange, currency, amount, rebalance, estimate, mock=True
         )
 
     if click.confirm("Do you want to continue?"):
-        for order in [order for order in orders if order.units]:
+#         for order in [order for order in orders if order.units]:
+        for order in [order for order in orders if float(abs(order.units)) >= float(order.minimum_order)]:
             (success, info) = exchange.process_order(order, mock=mock)
             if success:
                 log.info("The order executed successfully: " + str(info))
