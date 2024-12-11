@@ -54,7 +54,12 @@ class Portfolio:
     def connect(self, exchange):
         self.holdings = []
         cg = CoinGeckoAPI()
-        market_data = cg.get_coins_markets(self.currency)
+
+        market_data = []
+        for page in range(1, 4):  # Pages 1, 2, 3
+            this_market_data = cg.get_coins_markets(vs_currency='usd', page=page)
+            market_data.extend(this_market_data)  # Extend the list with the new data
+
         owned_assets = exchange.get_owned_assets()
         available_assets = exchange.get_available_assets(self.currency)
         excluded_assets = [asset.lower() for asset in self.model["exclude"]]
